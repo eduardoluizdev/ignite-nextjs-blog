@@ -1,1 +1,105 @@
-// TODO
+.banner {
+  width: 100%;
+  height: 400px;
+  background: var(--highlight);
+  background-position: center center;
+
+}
+
+.postContent {
+  margin-top: 5rem;
+  padding-bottom: 5rem;
+
+  article {
+    margin-top: 4rem;
+    color: var(--body);
+
+    h2, h3, h4, h5, h6 {
+      color: var(--heading);
+      margin-bottom: 3.875rem;
+    }
+
+    h2 {
+      font-size: 2.25rem;
+    }
+
+    h3 {
+      font-size: 1.625rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+
+      & + p {
+        margin-bottom: 2.25rem;
+      }
+    }
+
+    ul {
+      padding-left: 1.5rem;
+
+      li {
+        margin: 0.5rem 0;
+        font-size: 1.125rem;
+        color: var(--body);
+      }
+
+      & + p,
+      & + ul {
+        margin-bottom: 2.25rem;
+      }
+    }
+
+    a {
+      color: var(--highlight)
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+  }
+}
+
+.headerPost {
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    letter-spacing: -0.03125rem;
+    color: var(--heading);
+  }
+}
+
+.infosContent {
+  list-style: none;
+  margin-top: 1.5rem;
+
+  display: flex;
+  align-items: center;
+
+  div {
+    color: var(--info);
+    font-size: 0.875rem;
+
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--info);
+
+      margin-right: 0.5rem;
+    }
+
+    & + div {
+      margin-left: 1.5rem;
+    }
+  }
+
+  li:first-child {
+    span {
+      text-transform: capitalize;
+    }
+  }
+}
