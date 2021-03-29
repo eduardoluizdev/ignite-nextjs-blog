@@ -7,6 +7,9 @@ import { useRouter } from 'next/router';
 import { Fragment, useMemo } from 'react';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import Link from 'next/link';
+import Head from 'next/head';
+
 import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
@@ -33,9 +36,10 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  preview: boolean;
 }
 
-export default function Post({ post }: PostProps): JSX.Element {
+export default function Post({ post, preview }: PostProps): JSX.Element {
   const router = useRouter();
 
   const estimatedReadTime = useMemo(() => {
@@ -74,6 +78,10 @@ export default function Post({ post }: PostProps): JSX.Element {
 
   return (
     <>
+      <Head>
+        <title>{post.data.title} | Spacetraveling</title>
+        <meta name="description" content={post.data.title} />
+      </Head>
       <Header />
 
       <section
@@ -122,7 +130,17 @@ export default function Post({ post }: PostProps): JSX.Element {
             );
           })}
 
-          <Comments />
+          {preview && (
+            <aside className={styles.exitPreview}>
+              <Link href="/api/exit-preview">
+                <a>Sair do modo preview</a>
+              </Link>
+            </aside>
+          )}
+
+          <div className={commonStyles.container}>
+            <Comments />
+          </div>
         </article>
       </main>
     </>
@@ -145,15 +163,26 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<PostProps> = async context => {
+export const getStaticProps: GetStaticProps<PostProps> = async ({
+  params: { slug },
+  preview = false,
+  previewData,
+}) => {
   const prismic = getPrismicClient();
-  const { slug } = context.params;
+  const response = await prismic.getByUID('posts', String(slug), {
+    ref: previewData?.ref ?? null,
+  });
 
-  const response = await prismic.getByUID('posts', String(slug), {});
+  if (!response) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
       post: response,
+      preview,
     },
   };
 };
