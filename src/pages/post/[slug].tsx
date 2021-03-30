@@ -19,6 +19,8 @@ import { Comments } from '../../components/Comments';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
+  uid: string;
   data: {
     title: string;
     banner: {
@@ -37,9 +39,16 @@ interface Post {
 interface PostProps {
   post: Post;
   preview: boolean;
+  prevPost: Post | null;
+  nextPost: Post | null;
 }
 
-export default function Post({ post, preview }: PostProps): JSX.Element {
+export default function Post({
+  post,
+  preview,
+  prevPost,
+  nextPost,
+}: PostProps): JSX.Element {
   const router = useRouter();
 
   const estimatedReadTime = useMemo(() => {
@@ -113,6 +122,20 @@ export default function Post({ post, preview }: PostProps): JSX.Element {
             </div>
           </section>
         </section>
+        {post.first_publication_date !== post.last_publication_date && (
+          <div className={styles.lastEditedPost}>
+            *editado em
+            <span>
+              {format(
+                new Date(post.last_publication_date),
+                "'dia' dd 'de' MMMM', às ' HH:mm",
+                {
+                  locale: ptBR,
+                }
+              )}
+            </span>
+          </div>
+        )}
 
         <article>
           {post.data.content.map(({ heading, body }) => {
@@ -137,11 +160,31 @@ export default function Post({ post, preview }: PostProps): JSX.Element {
               </Link>
             </aside>
           )}
-
-          <div className={commonStyles.container}>
-            <Comments />
-          </div>
         </article>
+        <div className={styles.navigationPosts}>
+          {prevPost && (
+            <Link href={`/post/${prevPost.uid}`}>
+              <a className={styles.previous}>
+                {prevPost.data.title}
+                <span>Post anterior</span>
+              </a>
+            </Link>
+          )}
+
+          {nextPost && (
+            <Link href={`/post/${nextPost.uid}`}>
+              <a className={styles.previous}>
+                {nextPost.data.title}
+                <span>Próximo post</span>
+              </a>
+            </Link>
+          )}
+        </div>
+        <div
+          className={`${commonStyles.container} ${styles.commentsContainer}`}
+        >
+          <Comments />
+        </div>
       </main>
     </>
   );
@@ -163,7 +206,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<PostProps> = async ({
+export const getStaticProps: GetStaticProps = async ({
   params: { slug },
   preview = false,
   previewData,
@@ -179,10 +222,31 @@ export const getStaticProps: GetStaticProps<PostProps> = async ({
     };
   }
 
+  const prevPost = (
+    await prismic.query(Prismic.predicates.at('document.type', 'posts'), {
+      pageSize: 1,
+      after: response.id,
+      orderings: '[document.first_publication_date desc]',
+      fetch: ['posts.title'],
+    })
+  ).results[0];
+
+  const nextPost = (
+    await prismic.query(Prismic.predicates.at('document.type', 'posts'), {
+      pageSize: 1,
+      after: response.id,
+      orderings: '[document.first_publication_date]',
+      fetch: ['posts.title'],
+    })
+  ).results[0];
+
   return {
     props: {
       post: response,
       preview,
+      prevPost: prevPost ?? null,
+      nextPost: nextPost ?? null,
     },
+    revalidate: 60 * 60, // 1h
   };
 };

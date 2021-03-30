@@ -95,7 +95,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const postsResponse = await prismic.query(
     Prismic.predicates.at('document.type', 'posts'),
     {
-      pageSize: 1,
+      pageSize: 2,
     }
   );
 

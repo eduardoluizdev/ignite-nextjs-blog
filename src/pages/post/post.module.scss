@@ -6,6 +6,13 @@
 
 }
 
+.lastEditedPost {
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--info);
+  margin-top: 1rem;
+}
+
 .postContent {
   margin-top: 5rem;
   padding-bottom: 5rem;
@@ -102,4 +109,35 @@
       text-transform: capitalize;
     }
   }
+}
+
+.navigationPosts {
+  width: 100%;
+  padding-top: 3rem;
+  border-top: 1px solid var(--body);
+  margin-top: 3.75rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  a {
+    display: flex;
+    font-size: 1rem;
+    flex-direction: column;
+    max-width: 50%;
+    color: var(--body);
+
+    span {
+      color: var(--highlight);
+      font-size: 1.125rem;
+      font-weight: 600;
+      display: block;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.commentsContainer {
+  margin-top: 3rem;
 }
