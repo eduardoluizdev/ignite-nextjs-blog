@@ -29,14 +29,15 @@ This project was developed using the following technologies:
 - [TypeScript](https://www.typescriptlang.org/)
 - [SASS](https://sass-lang.com/)
 
-<!-- ## 🔥 Preview
+## 🔥 Extra Features
+<br>
 
+- ✅ Comments box from [https://utteranc.es/](https://utteranc.es/)
+- ✅ Preview Posts
+- ✅ Next and Previous posts
+- ✅ Last edited date and hour
 
-<p align="center">
-  <a href="" target="_blank">
-    <img alt="Demo on Netlify" src="https://i.ibb.co/b13vhFK/demo-on-netlify-bbuvjz.png">
-  </a>
-</p> -->
+<br>
 
 ## 🚀 Getting started
 
